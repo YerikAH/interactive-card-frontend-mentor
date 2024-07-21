@@ -1,29 +1,22 @@
 "use client";
+import { EnumForm, InterfaceForm } from "@/types";
 import { ChangeEvent, useState } from "react";
+import { formatCardNumber, formatName, formatNumber } from "@/utils";
 
-type FieldState = {
-  error: string | null;
-  value: string;
-};
-
-enum EnumForm {
-  CardHolderName = "card-holder-name",
-  CardNumber = "card-number",
-  ExpDateMonth = "exp-date-month",
-  ExpDateYear = "exp-date-year",
-  CardCvc = "card-cvc",
-}
-
-type InterfaceForm = Record<EnumForm, FieldState>;
 
 const initForm: InterfaceForm = {} as InterfaceForm;
-Object.values(EnumForm).forEach(item => initForm[item] = {error: null, value: ""})
+Object.values(EnumForm).forEach(
+  (item) => (initForm[item] = { error: null, value: "" })
+);
 
 export const FormCard = () => {
   const [form, setForm] = useState<InterfaceForm>(initForm);
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (
+    e: ChangeEvent<HTMLInputElement>,
+    format?: (value: string) => string
+  ) => {
     const name = e.target.name;
-    const value = e.target.value;
+    const value = format ? format(e.target.value) : e.target.value;
     setForm({ ...form, [name]: { value, error: null } });
   };
   return (
@@ -41,10 +34,11 @@ export const FormCard = () => {
             id="card-holder-name"
             placeholder="e.g. Jane Applessed"
             className="text-base border rounded-md px-4 py-2 block w-full mt-2 text-gray-900 outline-very-dark-violet"
-            onChange={(event) => handleChange(event)}
+            onChange={(event) => handleChange(event, formatName)}
             tabIndex={1}
             name={EnumForm.CardHolderName}
             value={form[EnumForm.CardHolderName].value}
+            required
           />
         </div>
 
@@ -61,8 +55,10 @@ export const FormCard = () => {
             placeholder="e.g. 1234 5678 9123 0000"
             className="text-base border rounded-md px-4 py-2 block w-full mt-2 text-gray-900 outline-very-dark-violet"
             name={EnumForm.CardNumber}
-            onChange={(event) => handleChange(event)}
+            onChange={(event) => handleChange(event, formatCardNumber)}
             value={form[EnumForm.CardNumber].value}
+            maxLength={19}
+            required
           />
         </div>
 
@@ -80,18 +76,22 @@ export const FormCard = () => {
                 id="exp-date"
                 placeholder="MM"
                 className="text-base border rounded-md px-4 py-2 block w-full mt-2 text-gray-900 outline-very-dark-violet"
-                onChange={(event) => handleChange(event)}
+                onChange={(event) => handleChange(event, formatNumber)}
+                maxLength={2}
                 name={EnumForm.ExpDateMonth}
                 value={form[EnumForm.ExpDateMonth].value}
+                required
               />
               <input
                 type="text"
                 id="exp-date"
                 placeholder="YY"
                 className="text-base border rounded-md px-4 py-2 block w-full mt-2 text-gray-900 outline-very-dark-violet"
-                onChange={(event) => handleChange(event)}
+                onChange={(event) => handleChange(event, formatNumber)}
+                maxLength={2}
                 name={EnumForm.ExpDateYear}
                 value={form[EnumForm.ExpDateYear].value}
+                required
               />
             </div>
           </div>
@@ -109,7 +109,9 @@ export const FormCard = () => {
               className="text-base border rounded-md px-4 py-2 block w-full mt-2 text-gray-900 outline-very-dark-violet"
               name={EnumForm.CardCvc}
               value={form[EnumForm.CardCvc].value}
-              onChange={(event) => handleChange(event)}
+              onChange={(event) => handleChange(event, formatNumber)}
+              maxLength={3}
+              required
             />
           </div>
         </div>
