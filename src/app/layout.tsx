@@ -21,7 +21,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={spaceGrotesk.variable}>
-      <body>{children}</body>
+      <body className="h-full">{children}</body>
     </html>
   );
 }

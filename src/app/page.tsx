@@ -2,7 +2,7 @@ import { FormCard, ViewCard } from "@/components";
 
 export default function Home() {
   return (
-    <main className="w-full lg:grid-cols-[300px_auto] grid">
+    <main className="w-full grid h-full lg:grid-cols-[50%_50%]">
       <ViewCard />
       <FormCard />
     </main>
